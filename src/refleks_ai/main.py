@@ -1,6 +1,6 @@
 
 from fastapi import FastAPI
-from .routers import diary_router, auth_router
+from .routers import diary_router, auth_router, chat_router
 
 app = FastAPI(
     title="Refleks AI",
@@ -11,6 +11,7 @@ app = FastAPI(
 # Dołączenie routerów
 app.include_router(auth_router.router)
 app.include_router(diary_router.router)
+app.include_router(chat_router.router)
 
 
 @app.get("/")

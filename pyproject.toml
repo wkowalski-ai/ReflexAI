@@ -18,6 +18,7 @@ dependencies = [
     "python-decouple", # Do zarządzania sekretami i konfiguracją
     "httpx", # Nowoczesny, asynchroniczny klient HTTP do zapytań API
     "email-validator>=2.2.0",
+    "python-multipart>=0.0.20",
 ]
 
 [project.optional-dependencies]
