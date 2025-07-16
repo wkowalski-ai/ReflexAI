@@ -78,7 +78,9 @@ def browser_type_launch_args(browser_type_launch_args):
             "--disable-features=TranslateUI",
             "--disable-ipc-flooding-protection"
         ]
-    }ytest.fixture
+    }
+
+@pytest.fixture
 def authenticated_client(client, test_user_data):
     """Fixture tworząca klienta z zalogowanym użytkownikiem."""
     try:
