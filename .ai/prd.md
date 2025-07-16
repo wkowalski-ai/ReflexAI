@@ -14,7 +14,7 @@
 
 ## 2. Grupa Docelowa (Target Audience)
 
-**Główny Użytkownik (Na podstawie wyboru 2B):**
+**Główny Użytkownik:**
 Osoby **już korzystające z profesjonalnej psychoterapii** (szczególnie w nurcie CBT), które szukają skutecznego i dyskretnego narzędzia do odrabiania "prac domowych" i systematyzowania swoich przemyśleń między sesjami.
 
 **Charakterystyka:**
@@ -24,9 +24,9 @@ Osoby **już korzystające z profesjonalnej psychoterapii** (szczególnie w nurc
 
 ## 3. Główne Funkcjonalności (Features)
 
-### 3.1. Ustrukturyzowany Program Nauki (Core Engagement)
+### 3.1. Ustrukturyzowany Program
 
-**Opis (Na podstawie wyboru 3D):** Aplikacja będzie miała formę **ustrukturyzowanego, kilkutygodniowego programu (np. "4 Tygodnie z CBT")**. Użytkownik będzie prowadzony krok po kroku przez kolejne moduły, które będą stopniowo odblokowywane.
+**Opis:** Aplikacja będzie miała formę **ustrukturyzowanego, kilkutygodniowego programu**. Użytkownik będzie prowadzony krok po kroku przez kolejne moduły, które będą stopniowo odblokowywane.
 
 * **Moduły Tygodniowe:** Każdy tydzień skupia się na innym aspekcie CBT (np. Tydzień 1: Wprowadzenie i identyfikacja myśli; Tydzień 2: Zniekształcenia poznawcze; Tydzień 3: Techniki reframingu).
 * **Postęp Użytkownika:** System śledzi postępy użytkownika w programie, pokazując, które moduły zostały ukończone.
@@ -57,7 +57,7 @@ Osoby **już korzystające z profesjonalnej psychoterapii** (szczególnie w nurc
 Pierwszym krokiem do realizacji tej wizji jest wdrożenie zdefiniowanego wcześniej MVP, które obejmuje:
 * Podstawową autentykację użytkownika.
 * Możliwość przeprowadzenia **jednej, pełnej sesji** z agentem AI.
-* Funkcje **CREATE** i **READ** dla Dziennika Myśli.
+* Funkcje **CREATE** **READ** **DELETE** dla Dziennika Myśli.
 * Testy i CI/CD.
 
 MVP stanowi fundament, na którym zostaną zbudowane funkcje programu, eksportu i filtrowania.

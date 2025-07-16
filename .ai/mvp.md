@@ -12,13 +12,14 @@ Użytkownicy często doświadczają negatywnych myśli, ale brakuje im natychmia
 - Zabezpieczenie: Wszystkie pozostałe endpointy wymagają ważnego tokenu.
 
 ### 2.2. Główna Logika Biznesowa (Czat z Agentem AI)
-- Endpoint: `/chat` (asynchroniczny).
+- Endpoint: `/chat`.
 - Logika: Agent AI prowadzi zalogowanego użytkownika przez jeden cykl "Dziennika Myśli" CBT.
 - Kontekst: Historia bieżącej rozmowy jest utrzymywana w celu zapewnienia spójności sesji.
 
 ### 2.3. Operacje CRUD na "Dziennikach Myśli"
 - **CREATE**: `POST /diaries` - Zapisuje podsumowanie ukończonej sesji w bazie danych, powiązane z użytkownikiem.
 - **READ**: `GET /diaries` - Zwraca listę wszystkich zapisanych dzienników dla zalogowanego użytkownika.
+- **DELETE**: `DELETE /diaries` - Usuwa wpis z dziennika dla zalogowanego użytkownika.
 
 ### 2.4. Testy
 - Framework: `pytest`.
