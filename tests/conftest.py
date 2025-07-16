@@ -115,15 +115,6 @@ def authenticated_client(client, test_user_data):
         print(f"Error in authenticated_client fixture: {e}")
         raise
 
-# Playwright fixtures for E2E tests
-@pytest.fixture(scope="session")
-def browser_context_args(browser_context_args):
-    """Configure browser context for E2E tests."""
-    return {
-        **browser_context_args,
-        "viewport": {"width": 1280, "height": 720},
-    }
-
 @pytest.fixture(scope="session")
 def playwright_test_fixture():
     """Fixture do testów E2E - pomija jeśli Playwright nie jest dostępny."""
