@@ -360,3 +360,32 @@ document.body.addEventListener('htmx:responseError', function(evt) {
         logout();
     }
 });
+
+// Obsługa usuwania wpisu z dziennika - odśwież listę po usunięciu
+document.body.addEventListener('htmx:afterRequest', function(evt) {
+    // Sprawdź czy to było żądanie DELETE do /diaries/
+    if (evt.detail.requestConfig.verb === 'delete' && 
+        evt.detail.requestConfig.path.startsWith('/diaries/') &&
+        evt.detail.xhr.status === 204) {
+        
+        // Odśwież listę dziennika jeśli jest widoczna
+        const mainContent = document.getElementById('main-content-area');
+        if (mainContent && mainContent.innerHTML.includes('diary-list')) {
+            // Wykonaj żądanie odświeżenia listy dziennika
+            fetch('/ui/diaries', {
+                headers: {
+                    'Authorization': `Bearer ${currentToken}`
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                mainContent.innerHTML = html;
+                showNotification('Wpis został usunięty', 'success');
+            })
+            .catch(error => {
+                console.error('Błąd podczas odświeżania listy:', error);
+                showNotification('Wpis został usunięty, ale lista może wymagać odświeżenia', 'warning');
+            });
+        }
+    }
+});
