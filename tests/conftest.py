@@ -39,6 +39,15 @@ def client(db_session):
     with TestClient(app) as c:
         yield c
 
+# Playwright fixtures for E2E tests
+@pytest.fixture(scope="session")
+def browser_context_args(browser_context_args):
+    """Configure browser context for E2E tests."""
+    return {
+        **browser_context_args,
+        "viewport": {"width": 1280, "height": 720},
+    }
+
 @pytest.fixture
 def test_user_data():
     """Sample user data for testing."""
