@@ -1,6 +1,6 @@
 
 from fastapi import FastAPI
-from .routers import diary_router
+from .routers import diary_router, auth_router
 
 app = FastAPI(
     title="Refleks AI",
@@ -8,7 +8,8 @@ app = FastAPI(
     version="0.1.0"
 )
 
-# Dołączenie routera dziennika
+# Dołączenie routerów
+app.include_router(auth_router.router)
 app.include_router(diary_router.router)
 
 

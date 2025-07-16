@@ -6,20 +6,9 @@ from ..database.database import get_db
 from ..schemas.diary_schema import DiaryCreate, DiaryUpdate, DiaryInDB
 from ..models.thought_diary_model import ThoughtDiary
 from ..models.user_model import User
+from ..dependencies import get_current_user
 
 router = APIRouter(prefix="/diaries", tags=["diaries"])
-
-
-# Placeholder dependency - należy zastąpić rzeczywistą implementacją
-async def get_current_user() -> User:
-    """
-    Placeholder dla zależności get_current_user.
-    Powinna zostać zastąpiona rzeczywistą implementacją uwierzytelniania.
-    """
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Authentication not implemented yet"
-    )
 
 
 @router.get("/", response_model=List[DiaryInDB])

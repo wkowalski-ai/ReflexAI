@@ -9,14 +9,15 @@ requires-python = ">=3.11"
 # Zależności produkcyjne - rdzeń naszej aplikacji
 dependencies = [
     "fastapi",
-    "uvicorn[standard]",  # Serwer ASGI z dodatkami wydajnościowymi
-    "sqlalchemy",          # ORM do bazy danych
-    "psycopg2-binary",     # Sterownik do PostgreSQL
-    "alembic",             # Narzędzie do migracji bazy danych
+    "uvicorn[standard]", # Serwer ASGI z dodatkami wydajnościowymi
+    "sqlalchemy", # ORM do bazy danych
+    "psycopg2-binary", # Sterownik do PostgreSQL
+    "alembic", # Narzędzie do migracji bazy danych
     "python-jose[cryptography]", # Do obsługi tokenów JWT
-    "passlib[bcrypt]",     # Do haszowania haseł
-    "python-decouple",     # Do zarządzania sekretami i konfiguracją
-    "httpx",               # Nowoczesny, asynchroniczny klient HTTP do zapytań API
+    "passlib[bcrypt]", # Do haszowania haseł
+    "python-decouple", # Do zarządzania sekretami i konfiguracją
+    "httpx", # Nowoczesny, asynchroniczny klient HTTP do zapytań API
+    "email-validator>=2.2.0",
 ]
 
 [project.optional-dependencies]
