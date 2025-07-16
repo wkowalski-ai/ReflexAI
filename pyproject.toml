@@ -28,4 +28,7 @@ dependencies = [
 dev = [
     "pytest",
     "pytest-asyncio", # Dodatek do pytest do testowania kodu asynchronicznego
+    "httpx", # Potrzebny dla TestClient
+    "playwright",
+    "pytest-mock" # Do mockowania w testachnchronicznego
 ]
