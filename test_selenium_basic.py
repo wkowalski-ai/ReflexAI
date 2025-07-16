@@ -4,7 +4,9 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 
 def test_selenium_basic():
@@ -18,9 +20,10 @@ def test_selenium_basic():
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--window-size=1280,720")
     
-    # Próba uruchomienia przeglądarki
+    # Próba uruchomienia przeglądarki z automatycznym pobieraniem driver'a
     try:
-        driver = webdriver.Chrome(options=chrome_options)
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=chrome_options)
         print("✓ Chrome WebDriver uruchomiony pomyślnie")
         
         # Test podstawowej funkcjonalności
