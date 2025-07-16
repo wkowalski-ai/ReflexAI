@@ -1,4 +1,3 @@
-
 // Stan aplikacji
 let chatHistory = [
     {
@@ -19,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event listenery dla formularzy uwierzytelniania
     setupAuthForms();
-    
+
     // Event listenery dla interfejsu aplikacji
     setupAppInterface();
 });
@@ -41,7 +40,7 @@ function setupAuthForms() {
     // Obsługa rejestracji
     document.getElementById('register-form').addEventListener('submit', async function(e) {
         e.preventDefault();
-        
+
         const formData = new FormData(e.target);
         const userData = {
             email: formData.get('email'),
@@ -75,7 +74,7 @@ function setupAuthForms() {
     // Obsługa logowania
     document.getElementById('login-form').addEventListener('submit', async function(e) {
         e.preventDefault();
-        
+
         const formData = new FormData(e.target);
         const loginData = new FormData();
         loginData.append('username', formData.get('email')); // FastAPI OAuth2 oczekuje 'username'
@@ -160,7 +159,7 @@ function showChatView() {
             <div id="chat-container" class="chat-container">
                 <!-- Wiadomości będą dodawane tutaj dynamicznie -->
             </div>
-            
+
             <div class="chat-input-area">
                 <form id="chat-form" class="chat-form">
                     <input type="text" id="chat-input" placeholder="Napisz swoją wiadomość..." required>
@@ -170,13 +169,13 @@ function showChatView() {
             </div>
         </div>
     `;
-    
+
     // Ponownie dodaj event listenery
     document.getElementById('chat-form').addEventListener('submit', async function(e) {
         e.preventDefault();
         await sendMessage();
     });
-    
+
     document.getElementById('end-session').addEventListener('click', async function() {
         await endChatSession();
     });
@@ -189,7 +188,7 @@ function resetChat() {
             content: "Jesteś profesjonalnym terapeutą CBT (Cognitive Behavioral Therapy). Twoim zadaniem jest prowadzenie sesji terapeutycznej, pomaganie w identyfikacji myśli automatycznych, emocji, zachowań i zniekształceń poznawczych. Zadawaj pytania, które pomogą pacjentowi zrozumieć swoje wzorce myślowe i wypracować zdrowsze sposoby radzenia sobie z problemami. Bądź empatyczny, profesjonalny i wspierający."
         }
     ];
-    
+
     const chatContainer = document.getElementById('chat-container');
     if (chatContainer) {
         chatContainer.innerHTML = '';
@@ -199,14 +198,14 @@ function resetChat() {
 async function sendMessage() {
     const input = document.getElementById('chat-input');
     const message = input.value.trim();
-    
+
     if (!message) return;
 
     // Dodaj wiadomość użytkownika do historii i wyświetl
     const userMessage = { role: "user", content: message };
     chatHistory.push(userMessage);
     displayMessage(userMessage);
-    
+
     // Wyczyść input
     input.value = '';
 
@@ -224,7 +223,7 @@ async function sendMessage() {
         if (response.ok) {
             const data = await response.json();
             const assistantMessage = data.message;
-            
+
             // Dodaj odpowiedź asystenta do historii i wyświetl
             chatHistory.push(assistantMessage);
             displayMessage(assistantMessage);
@@ -240,7 +239,7 @@ function displayMessage(message) {
     const chatContainer = document.getElementById('chat-container');
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${message.role}`;
-    
+
     if (message.role !== 'system') {
         messageDiv.innerHTML = `
             <div class="message-content">
@@ -285,11 +284,124 @@ function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     notification.textContent = message;
-    
+
     notificationArea.appendChild(notification);
-    
+
     // Usuń po 5 sekundach
     setTimeout(() => {
         notification.remove();
     }, 5000);
 }
+
+// Konfiguracja HTMX - dodaj token do wszystkich requestów
+document.body.addEventListener('htmx:configRequest', function(evt) {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+        evt.detail.headers['Authorization'] = `Bearer ${token}`;
+    }
+});
+
+// Obsługa błędów 401 - przekieruj do logowania
+document.body.addEventListener('htmx:responseError', function(evt) {
+    if (evt.detail.xhr.status === 401) {
+        console.log('Unauthorized access - redirecting to login');
+        logout();
+    }
+});
+
+function logout() {
+        localStorage.removeItem('access_token');
+        document.getElementById('main-content-area').innerHTML = `
+            <div id="chat-view" class="chat-view">
+                <div id="chat-container" class="chat-container">
+                    <!-- Wiadomości będą dodawane tutaj dynamicznie -->
+                </div>
+
+                <div class="chat-input-area">
+                    <form id="chat-form" class="chat-form">
+                        <input type="text" id="chat-input" placeholder="Napisz swoją wiadomość..." required>
+                        <button type="submit" class="btn-send">Wyślij</button>
+                    </form>
+                    <button id="end-session" class="btn-secondary">Zakończ i Zapisz Refleksję</button>
+                </div>
+            </div>
+        `;
+        showAuthContainer();
+        clearChat();
+        showNotification('Zostałeś wylogowany', 'success');
+
+        // Ponownie dodaj event listenery dla nowych elementów
+        setupChatEventListeners();
+    }
+function setupChatEventListeners() {
+        const chatForm = document.getElementById('chat-form');
+        const endSessionBtn = document.getElementById('end-session');
+
+        if (chatForm) {
+            chatForm.addEventListener('submit', handleChatSubmit);
+        }
+        if (endSessionBtn) {
+            endSessionBtn.addEventListener('click', handleEndSession);
+        }
+    }
+
+    // Event listenery
+    document.getElementById('show-register').addEventListener('click', showRegister);
+    document.getElementById('show-login').addEventListener('click', showLogin);
+    document.getElementById('login-form').addEventListener('submit', handleLogin);
+    document.getElementById('register-form').addEventListener('submit', handleRegister);
+    setupChatEventListeners();
+    document.getElementById('new-chat').addEventListener('click', startNewChat);
+    document.getElementById('logout').addEventListener('click', logout);
+    document.getElementById('menu-toggle').addEventListener('click', toggleMenu);
+function startNewChat() {
+        // Przywróć widok czatu
+        document.getElementById('main-content-area').innerHTML = `
+            <div id="chat-view" class="chat-view">
+                <div id="chat-container" class="chat-container">
+                    <!-- Wiadomości będą dodawane tutaj dynamicznie -->
+                </div>
+
+                <div class="chat-input-area">
+                    <form id="chat-form" class="chat-form">
+                        <input type="text" id="chat-input" placeholder="Napisz swoją wiadomość..." required>
+                        <button type="submit" class="btn-send">Wyślij</button>
+                    </form>
+                    <button id="end-session" class="btn-secondary">Zakończ i Zapisz Refleksję</button>
+                </div>
+            </div>
+        `;
+
+        clearChat();
+        setupChatEventListeners();
+        toggleMenu();
+        showNotification('Rozpoczęto nową rozmowę', 'success');
+    }
+// Sprawdź czy użytkownik jest zalogowany przy ładowaniu strony
+    function checkAuthOnLoad() {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            // Sprawdź czy token jest ważny poprzez test request
+            fetch('/ui/diaries', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    showAppContainer();
+                } else {
+                    // Token nieważny
+                    localStorage.removeItem('access_token');
+                    showAuthContainer();
+                }
+            })
+            .catch(() => {
+                // Błąd połączenia - usuń token
+                localStorage.removeItem('access_token');
+                showAuthContainer();
+            });
+        } else {
+            showAuthContainer();
+        }
+    }
