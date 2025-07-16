@@ -60,21 +60,29 @@ def test_user_data():
 @pytest.fixture
 def authenticated_client(client, test_user_data):
     """Create an authenticated client with a test user."""
-    # Najpierw zarejestruj użytkownika
-    register_response = client.post("/register", json=test_user_data)
-    assert register_response.status_code == 201
+    try:
+        # Najpierw zarejestruj użytkownika
+        register_response = client.post("/register", json=test_user_data)
+        if register_response.status_code != 201:
+            print(f"Registration failed: {register_response.status_code}, {register_response.text}")
+        assert register_response.status_code == 201
 
-    # Zaloguj się i pobierz token
-    login_data = {
-        "username": test_user_data["email"],
-        "password": test_user_data["password"]
-    }
-    login_response = client.post("/token", data=login_data)
-    assert login_response.status_code == 200
+        # Zaloguj się i pobierz token
+        login_data = {
+            "username": test_user_data["email"],
+            "password": test_user_data["password"]
+        }
+        login_response = client.post("/token", data=login_data)
+        if login_response.status_code != 200:
+            print(f"Login failed: {login_response.status_code}, {login_response.text}")
+        assert login_response.status_code == 200
 
-    token = login_response.json()["access_token"]
+        token = login_response.json()["access_token"]
 
-    # Ustaw nagłówek autoryzacji
-    client.headers.update({"Authorization": f"Bearer {token}"})
+        # Ustaw nagłówek autoryzacji
+        client.headers.update({"Authorization": f"Bearer {token}"})
 
-    return client, token
+        return client, token
+    except Exception as e:
+        print(f"Error in authenticated_client fixture: {e}")
+        raise

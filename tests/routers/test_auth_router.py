@@ -36,7 +36,26 @@ def test_register_invalid_email(client):
     }
     
     response = client.post("/register", json=invalid_data)
-    assert response.status_code == 422
+    assert response.status_code == 422  # Validation error
+
+
+def test_login_success(authenticated_client):
+    """Test udanego logowania."""
+    client, token = authenticated_client
+    # Jeśli dotarliśmy tutaj, logowanie już się udało w fixture
+    assert token is not None
+    assert len(token) > 0
+
+
+def test_login_invalid_credentials(client):
+    """Test logowania z błędnymi danymi."""
+    login_data = {
+        "username": "nonexistent@example.com",
+        "password": "wrongpassword"
+    }
+    
+    response = client.post("/token", data=login_data)
+    assert response.status_code == 401 422
 
 
 def test_login_success(client, test_user_data):
