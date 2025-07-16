@@ -3,14 +3,14 @@
 
 **Wersja:** 1.0
 **Status:** W trakcie opracowywania
-**Autor:** [Twoje Imię/Nazwisko]
+**Autor:** Witold Kowalski
 **Data:** 15.07.2025
 
 ## 1. Wprowadzenie i Cel (Vision & Goal)
 
 **Wizja produktu:** Refleks.AI to cyfrowe narzędzie wspierające psychoterapię, które pomaga pacjentom w praktykowaniu technik poznawczo-behawioralnych (CBT) pomiędzy sesjami. Aplikacja funkcjonuje jako ustrukturyzowany, interaktywny "zeszyt ćwiczeń", który ułatwia pracę domową zleconą przez terapeutę i pozwala na przygotowanie uporządkowanego materiału do omówienia na kolejnych spotkaniach.
 
-**Cel (Na podstawie wyboru 1D):** Głównym celem aplikacji jest umożliwienie użytkownikowi **stworzenia uporządkowanego, cyfrowego dziennika myśli**, który może być wartościowym wsparciem w profesjonalnej terapii, ułatwiając omawianie konkretnych przykładów i śledzenie postępów.
+**Cel:** Głównym celem aplikacji jest umożliwienie użytkownikowi **stworzenia uporządkowanego, cyfrowego dziennika myśli**, który może być wartościowym wsparciem w profesjonalnej terapii, ułatwiając omawianie konkretnych przykładów i śledzenie postępów.
 
 ## 2. Grupa Docelowa (Target Audience)
 
@@ -34,7 +34,7 @@ Osoby **już korzystające z profesjonalnej psychoterapii** (szczególnie w nurc
 
 ### 3.2. Sesja z Agentem AI (Core Interaction)
 
-**Opis (Na podstawie wyboru 4C):** Centralnym elementem każdego ćwiczenia jest dialog z agentem AI. Kluczowe jest **rygorystyczne trzymanie się metodologii klinicznej CBT**.
+**Opis:** Centralnym elementem każdego ćwiczenia jest dialog z agentem AI. Kluczowe jest **rygorystyczne trzymanie się metodologii klinicznej CBT**.
 
 * **Prowadzony Dialog:** Agent nie prowadzi luźnej rozmowy, lecz zadaje pytania zgodnie ze sprawdzonym schematem "Dziennika Myśli" (Sytuacja -> Emocje -> Myśli -> Dowody za/przeciw -> Myśl alternatywna).
 * **Brak "Magii":** Agent jasno komunikuje, że jest narzędziem i programem komputerowym, unikając stwierdzeń, które mogłyby sugerować ludzką świadomość lub empatię. Jego celem jest struktura, a nie udawanie terapeuty.
@@ -42,7 +42,7 @@ Osoby **już korzystające z profesjonalnej psychoterapii** (szczególnie w nurc
 
 ### 3.3. Dziennik Terapeutyczny (Core Output)
 
-**Opis (Na podstawie wyboru 1D):** Wszystkie ukończone ćwiczenia są zapisywane w formie "Dziennika Myśli", który jest głównym "produktem" pracy użytkownika w aplikacji.
+**Opis:** Wszystkie ukończone ćwiczenia są zapisywane w formie "Dziennika Myśli", który jest głównym "produktem" pracy użytkownika w aplikacji.
 
 * **Lista Wpisów:** Użytkownik ma dostęp do chronologicznej listy wszystkich swoich zapisanych dzienników.
 * **Filtrowanie i Przeglądanie:** Możliwość filtrowania wpisów (np. po zidentyfikowanym zniekształceniu poznawczym lub dacie).
