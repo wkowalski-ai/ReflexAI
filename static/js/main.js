@@ -72,23 +72,6 @@ function setupAppInterface() {
     document.getElementById('logout').addEventListener('click', function() {
         logout();
     });
-
-    // Formularz czatu
-    const chatForm = document.getElementById('chat-form');
-    if (chatForm) {
-        chatForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            await sendMessage();
-        });
-    }
-
-    // Zakończenie sesji
-    const endSessionBtn = document.getElementById('end-session');
-    if (endSessionBtn) {
-        endSessionBtn.addEventListener('click', async function() {
-            await endChatSession();
-        });
-    }
 }
 
 function showRegister() {
