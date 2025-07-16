@@ -99,9 +99,19 @@ ODPOWIEDZ TYLKO JSON - żadnego innego tekstu!"""
             print("ERROR: AI response is empty or only whitespace")
             raise ValueError("AI response is empty. Cannot decode JSON.")
         
-        # Oczyść odpowiedź z ewentualnych białych znaków
+        # Oczyść odpowiedź z ewentualnych białych znaków i formatowania Markdown
         cleaned_response = ai_response.strip()
-        print(f"Cleaned response: '{cleaned_response}'")
+        
+        # Usuń bloki kodu Markdown jeśli istnieją
+        if cleaned_response.startswith('```json'):
+            cleaned_response = cleaned_response[7:]  # Usuń '```json'
+        if cleaned_response.startswith('```'):
+            cleaned_response = cleaned_response[3:]   # Usuń '```'
+        if cleaned_response.endswith('```'):
+            cleaned_response = cleaned_response[:-3]  # Usuń '```' na końcu
+            
+        cleaned_response = cleaned_response.strip()
+        print(f"Cleaned response after markdown removal: '{cleaned_response}'")
         
         try:
             # Parsuj odpowiedź JSON
