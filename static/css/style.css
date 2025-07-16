@@ -177,19 +177,20 @@ body {
 }
 
 .nav-dropdown {
-    position: absolute;
-    top: calc(100% + 5px);
-    right: 0;
+    position: fixed;
+    top: 70px;
+    right: 20px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
     min-width: 200px;
-    z-index: 99999;
+    z-index: 999999;
     display: none;
     overflow: hidden;
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
     border: 1px solid #e2e8f0;
+    will-change: transform;
 }
 
 .nav-dropdown.show {
@@ -238,6 +239,8 @@ body {
     overflow-y: auto;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 1;
 }
 
 .message {
