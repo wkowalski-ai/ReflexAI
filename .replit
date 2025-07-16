@@ -3,7 +3,7 @@ modules = ["python-3.11", "postgresql-16"]
 
 [nix]
 channel = "stable-24_05"
-packages = ["cargo", "chromium", "geckodriver", "gitFull", "libiconv", "playwright-driver", "rustc"]
+packages = ["cargo", "chromium", "geckodriver", "gitFull", "libiconv", "playwright-driver", "rustc", "python311Packages.webdriver-manager", "google-chrome"]
 
 [unitTest]
 language = "python3"
