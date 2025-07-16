@@ -4,7 +4,8 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from src.refleks_ai.database.database import Base, get_db
+from src.refleks_ai.models import Base
+from src.refleks_ai.database.database import get_db
 from src.refleks_ai.main import app
 from decouple import config
 
