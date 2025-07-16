@@ -28,8 +28,9 @@ async def test_get_ai_response_success():
 
         result = await get_ai_response(mock_history)
 
-        assert result["role"] == "assistant"
-        assert "Rozumiem" in result["content"]
+        # Sprawdzamy, czy zwrócony tekst zgadza się z mockiem
+        expected_content = "Rozumiem, że czujesz się źle. Możesz mi powiedzieć więcej?"
+        assert result == expected_content
 
         # Sprawdź czy post został wywołany z poprawnymi argumentami
         mock_post.assert_called_once()

@@ -1,40 +1,40 @@
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+from src.refleks_ai.database.database import Base, get_db
+from src.refleks_ai.main import app
 from decouple import config
 
-# Używamy tej samej bazy co w dewelopmencie
-from src.refleks_ai.database.database import get_db
-from src.refleks_ai.main import app
-from src.refleks_ai.models import Base
+TEST_DATABASE_URL = config("TEST_DATABASE_URL", default="sqlite:///./test.db")
 
-# Użyj głównej bazy danych
-DATABASE_URL = config("DATABASE_URL", default="postgresql://user:password@localhost/refleks_ai")
-
-engine = create_engine(DATABASE_URL)
+engine = create_engine(TEST_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Stwórz tabele RAZ na początku sesji testowej
-Base.metadata.create_all(bind=engine)
+@pytest.fixture(scope="function")
+def db_session():
+    """Fixture tworząca czystą bazę i sesję w transakcji dla każdego testu."""
+    Base.metadata.drop_all(bind=engine) # Usuń wszystko
+    Base.metadata.create_all(bind=engine) # Stwórz od nowa
 
-def override_get_db():
-    """
-    Zależność, która będzie używana w testach zamiast oryginalnej get_db.
-    Używa tej samej bazy danych, ale w ramach transakcji testowej.
-    """
+    db = TestingSessionLocal()
     try:
-        db = TestingSessionLocal()
         yield db
     finally:
         db.close()
 
-# Nadpisz zależność get_db w głównej aplikacji na czas testów
-app.dependency_overrides[get_db] = override_get_db
+@pytest.fixture(scope="function")
+def client(db_session):
+    """Fixture tworząca klienta API z nadpisaną zależnością bazy danych."""
+    def override_get_db():
+        try:
+            yield db_session
+        finally:
+            db_session.close()
 
-@pytest.fixture()
-def client():
-    """Fixture dostarczająca klienta TestClient."""
+    app.dependency_overrides[get_db] = override_get_db
     with TestClient(app) as c:
         yield c
 
