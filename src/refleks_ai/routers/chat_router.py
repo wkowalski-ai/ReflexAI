@@ -1,6 +1,7 @@
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+import json
 from ..database.database import get_db
 from ..schemas.chat_schema import ChatRequest, ChatResponse, ChatMessage
 from ..schemas.diary_schema import DiaryInDB
@@ -43,8 +44,24 @@ async def end_chat_session(
     # Konwertuj ChatMessage na dict dla serwisu AI
     history = [{"role": msg.role, "content": msg.content} for msg in request.history]
     
-    # Uzyskaj podsumowanie sesji
-    summary_data = await summarize_session(history)
+    try:
+        # Uzyskaj podsumowanie sesji
+        summary_data = await summarize_session(history)
+    except (ValueError, json.JSONDecodeError, Exception) as e:
+        # W przypadku błędu, utwórz podstawowe podsumowanie
+        print(f"Error during session summarization: {str(e)}")
+        summary_data = {
+            "summary_title": "Sesja terapeutyczna",
+            "session_data": {
+                "situation": "Sesja została zakończona, ale automatyczne podsumowanie nie powiodło się",
+                "automatic_thought": "Brak danych",
+                "emotion": "Brak danych",
+                "behavior": "Brak danych", 
+                "cognitive_distortion": "Brak danych",
+                "alternative_thought": "Brak danych",
+                "action_plan": "Przejrzyj historię czatu ręcznie"
+            }
+        }
     
     # Utwórz nowy wpis w dzienniku
     db_diary = ThoughtDiary(

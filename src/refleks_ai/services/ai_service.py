@@ -82,5 +82,28 @@ async def summarize_session(history: List[dict]) -> dict:
         data = response.json()
         ai_response = data["choices"][0]["message"]["content"]
 
-        # Parsuj odpowiedź JSON
-        return json.loads(ai_response)
+        # Sprawdź czy odpowiedź nie jest pusta
+        if not ai_response or not ai_response.strip():
+            raise ValueError("AI response is empty. Cannot decode JSON.")
+        
+        try:
+            # Parsuj odpowiedź JSON
+            return json.loads(ai_response.strip())
+        except json.JSONDecodeError as e:
+            # Jeśli JSON jest nieprawidłowy, zwróć domyślną strukturę
+            print(f"Failed to decode JSON from AI response: {str(e)}")
+            print(f"AI response was: {ai_response}")
+            
+            # Zwróć domyślną strukturę w przypadku błędu
+            return {
+                "summary_title": "Sesja terapeutyczna - błąd podsumowania",
+                "session_data": {
+                    "situation": "Nie udało się automatycznie podsumować sytuacji",
+                    "automatic_thought": "Nie udało się automatycznie podsumować myśli",
+                    "emotion": "Nie udało się automatycznie podsumować emocji", 
+                    "behavior": "Nie udało się automatycznie podsumować zachowań",
+                    "cognitive_distortion": "Nie udało się automatycznie zidentyfikować zniekształceń",
+                    "alternative_thought": "Nie udało się automatycznie wygenerować alternatywnych myśli",
+                    "action_plan": "Nie udało się automatycznie wygenerować planu działania"
+                }
+            }
