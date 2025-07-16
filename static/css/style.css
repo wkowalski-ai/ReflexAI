@@ -183,7 +183,7 @@ body {
     border-radius: 12px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
     min-width: 200px;
-    z-index: 1000;
+    z-index: 9999;
     display: none;
     overflow: hidden;
 }
