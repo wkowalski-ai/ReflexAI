@@ -1,11 +1,11 @@
 
-
 from playwright.sync_api import sync_playwright
 import os
 
 # Konfiguracja Playwright dla środowiska Replit
 playwright_config = {
     "headless": True,
+    "executable_path": "/nix/store/*-chromium-*/bin/chromium",
     "args": [
         "--no-sandbox",
         "--disable-setuid-sandbox",
