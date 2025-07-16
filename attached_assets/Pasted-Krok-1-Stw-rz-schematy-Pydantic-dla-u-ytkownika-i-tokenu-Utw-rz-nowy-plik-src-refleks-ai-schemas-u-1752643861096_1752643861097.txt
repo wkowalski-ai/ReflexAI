@@ -1,0 +1,77 @@
+Krok 1: Stwórz schematy Pydantic dla użytkownika i tokenu
+
+Utwórz nowy plik src/refleks_ai/schemas/user_schema.py. Zdefiniuj w nim schematy:
+
+UserCreate: z polami email (Pydantic's EmailStr), password (str) i username (str, opcjonalne).
+
+UserInDB: z polami id (int), email (EmailStr), username (str, opcjonalne). Ten schemat nie powinien zawierać hasła.
+
+Utwórz nowy plik src/refleks_ai/schemas/token_schema.py. Zdefiniuj w nim schemat Token z polami: access_token (str) i token_type (str).
+
+Krok 2: Stwórz moduły pomocnicze do obsługi bezpieczeństwa
+
+Utwórz nowy plik src/refleks_ai/security/hashing.py. Zdefiniuj w nim dwie funkcje:
+
+get_password_hash(password: str) -> str: Haszuje hasło przy użyciu passlib i bcrypt.
+
+verify_password(plain_password: str, hashed_password: str) -> bool: Weryfikuje, czy podane hasło pasuje do hasha.
+
+Utwórz nowy plik src/refleks_ai/security/jwt.py. Zdefiniuj w nim funkcję create_access_token. Funkcja ta powinna odczytywać SECRET_KEY, ALGORITHM i ACCESS_TOKEN_EXPIRE_MINUTES ze zmiennych środowiskowych i generować token JWT.
+
+Krok 3: Stwórz współdzieloną zależność do autentykacji
+
+Utwórz nowy plik src/refleks_ai/dependencies.py.
+
+Zdefiniuj w nim asynchroniczną funkcję zależności get_current_user. Funkcja ta powinna:
+
+Zależeć od OAuth2PasswordBearer(tokenUrl="/token").
+
+Przyjmować token jako argument.
+
+Dekodować token JWT, obsługując błędy (np. JWTError, ValidationError).
+
+Wyciągać email użytkownika z payloadu tokena.
+
+Pobierać użytkownika z bazy danych na podstawie adresu e-mail.
+
+Zgłaszać błąd HTTPException 401, jeśli token jest nieprawidłowy lub użytkownik nie istnieje.
+
+Zwracać obiekt użytkownika z bazy danych.
+
+Krok 4: Zaimplementuj router dla autentykacji
+
+Utwórz nowy plik src/refleks_ai/routers/auth_router.py.
+
+Zaimplementuj endpoint POST /register, który:
+
+Przyjmuje dane w schemacie UserCreate.
+
+Sprawdza, czy użytkownik o danym adresie e-mail już nie istnieje.
+
+Haszuje hasło za pomocą funkcji z hashing.py.
+
+Zapisuje nowego użytkownika w bazie danych.
+
+Zwraca obiekt nowego użytkownika (w schemacie UserInDB).
+
+Zaimplementuj endpoint POST /token (dla logowania), który:
+
+Przyjmuje dane formularza za pomocą Depends(OAuth2PasswordRequestForm).
+
+Weryfikuje użytkownika (znajduje go w bazie i sprawdza hasło).
+
+W przypadku poprawnej weryfikacji, tworzy i zwraca token JWT w schemacie Token.
+
+Krok 5: Zabezpiecz istniejące endpointy i zintegruj routery
+
+W pliku src/refleks_ai/routers/diary_router.py:
+
+Zaimportuj get_current_user z dependencies.py.
+
+Dodaj Depends(get_current_user) jako zależność do każdego endpointu (GET, POST, PATCH, DELETE).
+
+Zmodyfikuj sygnatury funkcji, aby przyjmowały current_user: User = Depends(get_current_user) i używały current_user.id do filtrowania, tworzenia i weryfikacji wpisów.
+
+W głównym pliku src/refleks_ai/main.py:
+
+Zaimportuj i dołącz nowo utworzony auth_router do głównej aplikacji FastAPI.
