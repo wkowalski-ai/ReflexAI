@@ -1,7 +1,27 @@
 [project]
-name = "python-template"
+name = "refleks-ai"
 version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+description = "Aplikacja wspierająca terapię CBT z wykorzystaniem agenta AI."
+authors = [
+    { name = "Your Name", email = "you@example.com" },
+]
 requires-python = ">=3.11"
-dependencies = []
+# Zależności produkcyjne - rdzeń naszej aplikacji
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",  # Serwer ASGI z dodatkami wydajnościowymi
+    "sqlalchemy",          # ORM do bazy danych
+    "psycopg2-binary",     # Sterownik do PostgreSQL
+    "alembic",             # Narzędzie do migracji bazy danych
+    "python-jose[cryptography]", # Do obsługi tokenów JWT
+    "passlib[bcrypt]",     # Do haszowania haseł
+    "python-decouple",     # Do zarządzania sekretami i konfiguracją
+    "httpx",               # Nowoczesny, asynchroniczny klient HTTP do zapytań API
+]
+
+[project.optional-dependencies]
+# Zależności deweloperskie - potrzebne tylko do testowania
+dev = [
+    "pytest",
+    "pytest-asyncio", # Dodatek do pytest do testowania kodu asynchronicznego
+]
