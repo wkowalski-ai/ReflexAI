@@ -1,0 +1,197 @@
+
+<div class="diary-list">
+    <h2>Mój Dziennik Refleksji</h2>
+    
+    {% if diaries %}
+        <ul class="diary-entries">
+            {% for diary in diaries %}
+            <li class="diary-entry" id="diary-{{ diary.id }}">
+                <div class="diary-header">
+                    <h3>{{ diary.summary_title or "Sesja z " + diary.created_at.strftime("%d.%m.%Y %H:%M") }}</h3>
+                    <span class="diary-date">{{ diary.created_at.strftime("%d.%m.%Y %H:%M") }}</span>
+                </div>
+                
+                <div class="diary-content">
+                    {% if diary.session_data %}
+                        {% if diary.session_data.situation %}
+                        <div class="session-field">
+                            <strong>Sytuacja:</strong>
+                            <p>{{ diary.session_data.situation }}</p>
+                        </div>
+                        {% endif %}
+                        
+                        {% if diary.session_data.automatic_thought %}
+                        <div class="session-field">
+                            <strong>Automatyczne myśli:</strong>
+                            <p>{{ diary.session_data.automatic_thought }}</p>
+                        </div>
+                        {% endif %}
+                        
+                        {% if diary.session_data.emotion %}
+                        <div class="session-field">
+                            <strong>Emocje:</strong>
+                            <p>{{ diary.session_data.emotion }}</p>
+                        </div>
+                        {% endif %}
+                        
+                        {% if diary.session_data.cognitive_distortion %}
+                        <div class="session-field">
+                            <strong>Zniekształcenia poznawcze:</strong>
+                            <p>{{ diary.session_data.cognitive_distortion }}</p>
+                        </div>
+                        {% endif %}
+                        
+                        {% if diary.session_data.alternative_thought %}
+                        <div class="session-field">
+                            <strong>Alternatywne myśli:</strong>
+                            <p>{{ diary.session_data.alternative_thought }}</p>
+                        </div>
+                        {% endif %}
+                        
+                        {% if diary.session_data.action_plan %}
+                        <div class="session-field">
+                            <strong>Plan działania:</strong>
+                            <p>{{ diary.session_data.action_plan }}</p>
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                
+                <div class="diary-actions">
+                    <button 
+                        hx-delete="/diaries/{{ diary.id }}" 
+                        hx-target="closest li" 
+                        hx-swap="outerHTML" 
+                        hx-confirm="Czy na pewno chcesz usunąć ten wpis?"
+                        class="btn-delete">
+                        Usuń
+                    </button>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="empty-diary">
+            <p>Nie masz jeszcze żadnych zapisanych sesji.</p>
+            <button onclick="document.getElementById('new-chat').click()" class="btn-primary">
+                Rozpocznij pierwszą sesję
+            </button>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.diary-list {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.diary-list h2 {
+    color: #4a5568;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: 300;
+}
+
+.diary-entries {
+    list-style: none;
+}
+
+.diary-entry {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.diary-entry:hover {
+    transform: translateY(-2px);
+}
+
+.diary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.diary-header h3 {
+    color: #4a5568;
+    font-weight: 400;
+    margin: 0;
+}
+
+.diary-date {
+    color: #718096;
+    font-size: 0.9rem;
+}
+
+.diary-content {
+    margin-bottom: 20px;
+}
+
+.session-field {
+    margin-bottom: 15px;
+}
+
+.session-field strong {
+    color: #4a5568;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.session-field p {
+    color: #718096;
+    line-height: 1.5;
+    margin: 0;
+    padding-left: 10px;
+    border-left: 3px solid #e2e8f0;
+}
+
+.diary-actions {
+    text-align: right;
+}
+
+.btn-delete {
+    background: #f56565;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-delete:hover {
+    background: #e53e3e;
+}
+
+.empty-diary {
+    text-align: center;
+    padding: 60px 20px;
+    color: #718096;
+}
+
+.empty-diary p {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .diary-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .diary-entry {
+        padding: 20px 15px;
+    }
+}
+</style>

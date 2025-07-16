@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refleks AI - Terapia CBT</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="/static/js/main.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Formularze logowania i rejestracji -->
+    <div id="auth-container" class="auth-container">
+        <div class="auth-wrapper">
+            <h1>Refleks AI</h1>
+            <p class="subtitle">Twój asystent terapii CBT</p>
+            
+            <!-- Formularz logowania -->
+            <div id="login-section" class="auth-section active">
+                <h2>Zaloguj się</h2>
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-email">Email:</label>
+                        <input type="email" id="login-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Hasło:</label>
+                        <input type="password" id="login-password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Zaloguj się</button>
+                </form>
+                <p class="switch-auth">
+                    Nie masz konta? <a href="#" id="show-register">Zarejestruj się</a>
+                </p>
+            </div>
+
+            <!-- Formularz rejestracji -->
+            <div id="register-section" class="auth-section">
+                <h2>Zarejestruj się</h2>
+                <form id="register-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="register-email">Email:</label>
+                        <input type="email" id="register-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-username">Nazwa użytkownika (opcjonalne):</label>
+                        <input type="text" id="register-username" name="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Hasło:</label>
+                        <input type="password" id="register-password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Zarejestruj się</button>
+                </form>
+                <p class="switch-auth">
+                    Masz już konto? <a href="#" id="show-login">Zaloguj się</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Główny interfejs aplikacji -->
+    <div id="app-container" class="app-container hidden">
+        <!-- Menu hamburgerowe -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h1>Refleks AI</h1>
+            </div>
+            <div class="nav-menu">
+                <button id="menu-toggle" class="menu-toggle">☰</button>
+                <div id="nav-dropdown" class="nav-dropdown">
+                    <button hx-get="/ui/diaries" hx-target="#main-content-area" hx-swap="innerHTML" class="nav-item">
+                        Zobacz mój dziennik
+                    </button>
+                    <button id="new-chat" class="nav-item">Nowa rozmowa</button>
+                    <button id="logout" class="nav-item">Wyloguj się</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Główny obszar treści -->
+        <main id="main-content-area" class="main-content">
+            <!-- Interfejs czatu -->
+            <div id="chat-view" class="chat-view">
+                <div id="chat-container" class="chat-container">
+                    <!-- Wiadomości będą dodawane tutaj dynamicznie -->
+                </div>
+                
+                <div class="chat-input-area">
+                    <form id="chat-form" class="chat-form">
+                        <input type="text" id="chat-input" placeholder="Napisz swoją wiadomość..." required>
+                        <button type="submit" class="btn-send">Wyślij</button>
+                    </form>
+                    <button id="end-session" class="btn-secondary">Zakończ i Zapisz Refleksję</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Obszar dla komunikatów -->
+    <div id="notification-area" class="notification-area"></div>
+</body>
+</html>
