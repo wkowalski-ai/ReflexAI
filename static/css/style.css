@@ -176,16 +176,18 @@ body {
 }
 
 .nav-dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
+    position: fixed;
+    top: 60px;
+    right: 20px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
     min-width: 200px;
-    z-index: 9999;
+    z-index: 99999;
     display: none;
     overflow: hidden;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
 }
 
 .nav-dropdown.show {
