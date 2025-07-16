@@ -405,3 +405,4 @@ function startNewChat() {
             showAuthContainer();
         }
     }
+```
