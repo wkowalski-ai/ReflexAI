@@ -2,13 +2,6 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-import os
-import subprocess
-import time
-import requests
 
 from src.refleks_ai.models import Base
 from src.refleks_ai.database.database import get_db
@@ -45,49 +38,6 @@ def client(db_session):
     with TestClient(app) as c:
         yield c
 
-# Test data fixtures
-@pytest.fixture
-def test_user_data():
-    """Fixture z danymi testowego użytkownika."""
-    return {
-        "email": "test@example.com",
-        "username": "testuser",
-        "password": "testpassword123"
-    }
-
-@pytest.fixture(scope="session")
-def selenium_driver():
-    """Fixture dla Selenium WebDriver."""
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-setuid-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-accelerated-2d-canvas")
-    chrome_options.add_argument("--no-first-run")
-    chrome_options.add_argument("--no-zygote")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--disable-background-timer-throttling")
-    chrome_options.add_argument("--disable-backgrounding-occluded-windows")
-    chrome_options.add_argument("--disable-renderer-backgrounding")
-    chrome_options.add_argument("--disable-features=TranslateUI")
-    chrome_options.add_argument("--disable-ipc-flooding-protection")
-    chrome_options.add_argument("--window-size=1280,720")
-
-    # Próbuj użyć chromium z Nix
-    chromium_path = "/nix/store/*/bin/chromium"
-    try:
-        import glob
-        chromium_paths = glob.glob(chromium_path)
-        if chromium_paths:
-            chrome_options.binary_location = chromium_paths[0]
-    except:
-        pass
-
-    driver = webdriver.Chrome(options=chrome_options)
-    yield driver
-    driver.quit()
-
 @pytest.fixture
 def authenticated_client(client, test_user_data):
     """Fixture tworząca klienta z zalogowanym użytkownikiem."""
@@ -123,31 +73,11 @@ def authenticated_client(client, test_user_data):
         print(f"Error in authenticated_client fixture: {e}")
         raise
 
-@pytest.fixture(scope="session")
-def test_server():
-    """Fixture uruchamiająca serwer dla testów E2E."""
-    # Uruchom serwer używając main.py
-    process = subprocess.Popen([
-        "python", 
-        "main.py"
-    ])
-
-    # Poczekaj aż serwer się uruchomi
-    max_attempts = 30
-    for attempt in range(max_attempts):
-        try:
-            response = requests.get("http://127.0.0.1:5000/health", timeout=1)
-            if response.status_code == 200:
-                break
-        except:
-            pass
-        time.sleep(1)
-    else:
-        process.terminate()
-        raise Exception("Serwer nie uruchomił się w czasie 30 sekund")
-
-    yield process
-
-    # Zatrzymaj serwer
-    process.terminate()
-    process.wait()
+@pytest.fixture
+def test_user_data():
+    """Fixture z danymi testowego użytkownika."""
+    return {
+        "email": "test@example.com",
+        "username": "testuser",
+        "password": "testpassword123"
+    }
