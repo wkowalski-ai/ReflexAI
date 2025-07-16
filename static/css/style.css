@@ -158,6 +158,7 @@ body {
 
 .nav-menu {
     position: relative;
+    z-index: 1000;
 }
 
 .menu-toggle {
@@ -176,9 +177,9 @@ body {
 }
 
 .nav-dropdown {
-    position: fixed;
-    top: 60px;
-    right: 20px;
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
     background: white;
     border-radius: 12px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
@@ -188,6 +189,7 @@ body {
     overflow: hidden;
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
+    border: 1px solid #e2e8f0;
 }
 
 .nav-dropdown.show {
