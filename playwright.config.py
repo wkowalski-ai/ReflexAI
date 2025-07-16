@@ -1,9 +1,11 @@
 
 from playwright.sync_api import sync_playwright
+import os
 
 # Konfiguracja Playwright dla środowiska Replit
 playwright_config = {
     "headless": True,
+    "executable_path": "/nix/store/*-chromium-*/bin/chromium",
     "args": [
         "--no-sandbox",
         "--disable-setuid-sandbox",
@@ -11,6 +13,11 @@ playwright_config = {
         "--disable-accelerated-2d-canvas",
         "--no-first-run",
         "--no-zygote",
-        "--disable-gpu"
+        "--disable-gpu",
+        "--disable-background-timer-throttling",
+        "--disable-backgrounding-occluded-windows",
+        "--disable-renderer-backgrounding",
+        "--disable-features=TranslateUI",
+        "--disable-ipc-flooding-protection"
     ]
 }

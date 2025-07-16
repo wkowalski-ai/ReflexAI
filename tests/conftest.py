@@ -49,7 +49,36 @@ def test_user_data():
         "password": "testpassword123"
     }
 
-@pytest.fixture
+@pytest.fixture(scope="session")
+def browser_context_args(browser_context_args):
+    """Configure browser context for Replit environment."""
+    return {
+        **browser_context_args,
+        "ignore_https_errors": True,
+        "viewport": {"width": 1280, "height": 720}
+    }
+
+@pytest.fixture(scope="session")
+def browser_type_launch_args(browser_type_launch_args):
+    """Configure browser launch args for Replit environment."""
+    return {
+        **browser_type_launch_args,
+        "headless": True,
+        "args": [
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--disable-dev-shm-usage",
+            "--disable-accelerated-2d-canvas",
+            "--no-first-run",
+            "--no-zygote",
+            "--disable-gpu",
+            "--disable-background-timer-throttling",
+            "--disable-backgrounding-occluded-windows",
+            "--disable-renderer-backgrounding",
+            "--disable-features=TranslateUI",
+            "--disable-ipc-flooding-protection"
+        ]
+    }ytest.fixture
 def authenticated_client(client, test_user_data):
     """Fixture tworząca klienta z zalogowanym użytkownikiem."""
     try:
