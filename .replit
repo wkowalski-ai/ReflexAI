@@ -3,7 +3,7 @@ modules = ["python-3.11", "postgresql-16"]
 
 [nix]
 channel = "stable-24_05"
-packages = ["cargo", "gitFull", "libiconv", "playwright-driver", "rustc", "chromium", "playwright", "python312Packages.playwright", "playwright-test"]
+packages = ["cargo", "gitFull", "libiconv", "rustc", "chromium"]
 
 [unitTest]
 language = "python3"

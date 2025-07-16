@@ -1,8 +1,11 @@
-
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+import os
 
 from src.refleks_ai.models import Base
 from src.refleks_ai.database.database import get_db
@@ -50,35 +53,37 @@ def test_user_data():
     }
 
 @pytest.fixture(scope="session")
-def browser_context_args(browser_context_args):
-    """Configure browser context for Replit environment."""
-    return {
-        **browser_context_args,
-        "ignore_https_errors": True,
-        "viewport": {"width": 1280, "height": 720}
-    }
+def selenium_driver():
+    """Fixture dla Selenium WebDriver."""
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-setuid-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-accelerated-2d-canvas")
+    chrome_options.add_argument("--no-first-run")
+    chrome_options.add_argument("--no-zygote")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--disable-background-timer-throttling")
+    chrome_options.add_argument("--disable-backgrounding-occluded-windows")
+    chrome_options.add_argument("--disable-renderer-backgrounding")
+    chrome_options.add_argument("--disable-features=TranslateUI")
+    chrome_options.add_argument("--disable-ipc-flooding-protection")
+    chrome_options.add_argument("--window-size=1280,720")
 
-@pytest.fixture(scope="session")
-def browser_type_launch_args(browser_type_launch_args):
-    """Configure browser launch args for Replit environment."""
-    return {
-        **browser_type_launch_args,
-        "headless": True,
-        "args": [
-            "--no-sandbox",
-            "--disable-setuid-sandbox",
-            "--disable-dev-shm-usage",
-            "--disable-accelerated-2d-canvas",
-            "--no-first-run",
-            "--no-zygote",
-            "--disable-gpu",
-            "--disable-background-timer-throttling",
-            "--disable-backgrounding-occluded-windows",
-            "--disable-renderer-backgrounding",
-            "--disable-features=TranslateUI",
-            "--disable-ipc-flooding-protection"
-        ]
-    }
+    # Próbuj użyć chromium z Nix
+    chromium_path = "/nix/store/*/bin/chromium"
+    try:
+        import glob
+        chromium_paths = glob.glob(chromium_path)
+        if chromium_paths:
+            chrome_options.binary_location = chromium_paths[0]
+    except:
+        pass
+
+    driver = webdriver.Chrome(options=chrome_options)
+    yield driver
+    driver.quit()
 
 @pytest.fixture
 def authenticated_client(client, test_user_data):
@@ -86,51 +91,31 @@ def authenticated_client(client, test_user_data):
     try:
         # Zarejestruj użytkownika
         register_response = client.post("/register", json=test_user_data)
-        
+
         if register_response.status_code != 201:
             print(f"Registration failed: {register_response.json()}")
             raise Exception("Failed to register test user")
-        
+
         # Zaloguj użytkownika
         login_data = {
             "username": test_user_data["email"],  # FastAPI OAuth2 używa 'username'
             "password": test_user_data["password"]
         }
-        
+
         login_response = client.post("/token", data=login_data)
-        
+
         if login_response.status_code != 200:
             print(f"Login failed: {login_response.json()}")
             raise Exception("Failed to login test user")
-        
+
         token_data = login_response.json()
         token = token_data["access_token"]
-        
+
         # Set Authorization header for the client
         client.headers.update({"Authorization": f"Bearer {token}"})
-        
+
         return client, token
-        
+
     except Exception as e:
         print(f"Error in authenticated_client fixture: {e}")
         raise
-
-# Playwright fixtures for E2E tests
-@pytest.fixture(scope="session")
-def browser_context_args(browser_context_args):
-    """Configure browser context for E2E tests."""
-    return {
-        **browser_context_args,
-        "viewport": {"width": 1280, "height": 720},
-    }
-
-@pytest.fixture(scope="session")
-def playwright_test_fixture():
-    """Fixture do testów E2E - pomija jeśli Playwright nie jest dostępny."""
-    try:
-        from playwright.sync_api import sync_playwright
-        return True
-    except ImportError:
-        pytest.skip("Playwright not available for E2E tests")
-
-
