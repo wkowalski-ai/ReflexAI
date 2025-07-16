@@ -126,13 +126,10 @@ def authenticated_client(client, test_user_data):
 @pytest.fixture(scope="session")
 def test_server():
     """Fixture uruchamiająca serwer dla testów E2E."""
-    # Uruchom serwer w subprocess
+    # Uruchom serwer używając main.py
     process = subprocess.Popen([
-        "uvicorn", 
-        "src.refleks_ai.main:app",
-        "--host", "127.0.0.1",
-        "--port", "5000",
-        "--log-level", "error"
+        "python", 
+        "main.py"
     ])
 
     # Poczekaj aż serwer się uruchomi
