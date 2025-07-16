@@ -28,7 +28,7 @@ async def get_ai_response(history: List[dict]) -> str:
         )
         response.raise_for_status()
 
-        data = await response.json()
+        data = response.json()
         return data["choices"][0]["message"]["content"]
 
 
@@ -85,7 +85,7 @@ ODPOWIEDZ TYLKO JSON - żadnego innego tekstu!"""
         )
         response.raise_for_status()
 
-        response_data = await response.json()
+        response_data = response.json()
 
         # Otrzymujemy odpowiedź od AI
         ai_response = response_data["choices"][0]["message"]["content"]
