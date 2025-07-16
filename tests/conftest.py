@@ -75,6 +75,9 @@ def authenticated_client(client, test_user_data):
         token_data = login_response.json()
         token = token_data["access_token"]
         
+        # Set Authorization header for the client
+        client.headers.update({"Authorization": f"Bearer {token}"})
+        
         return client, token
         
     except Exception as e:
