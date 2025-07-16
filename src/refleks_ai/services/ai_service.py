@@ -28,7 +28,7 @@ async def get_ai_response(history: List[dict]) -> str:
         )
         response.raise_for_status()
 
-        data = response.json()
+        data = await response.json()
         return data["choices"][0]["message"]["content"]
 
 
@@ -85,23 +85,25 @@ ODPOWIEDZ TYLKO JSON - żadnego innego tekstu!"""
         )
         response.raise_for_status()
 
-        data = response.json()
-        ai_response = data["choices"][0]["message"]["content"]
+        response_data = await response.json()
+
+        # Otrzymujemy odpowiedź od AI
+        ai_response = response_data["choices"][0]["message"]["content"]
 
         # Szczegółowe logowanie dla debugowania
         print(f"=== DEBUGGING AI SUMMARY RESPONSE ===")
         print(f"Raw AI response: '{ai_response}'")
         print(f"Response length: {len(ai_response) if ai_response else 0}")
         print(f"Response type: {type(ai_response)}")
-        
+
         # Sprawdź czy odpowiedź nie jest pusta
         if not ai_response or not ai_response.strip():
             print("ERROR: AI response is empty or only whitespace")
             raise ValueError("AI response is empty. Cannot decode JSON.")
-        
+
         # Oczyść odpowiedź z ewentualnych białych znaków i formatowania Markdown
         cleaned_response = ai_response.strip()
-        
+
         # Usuń bloki kodu Markdown jeśli istnieją
         if cleaned_response.startswith('```json'):
             cleaned_response = cleaned_response[7:]  # Usuń '```json'
@@ -109,10 +111,10 @@ ODPOWIEDZ TYLKO JSON - żadnego innego tekstu!"""
             cleaned_response = cleaned_response[3:]   # Usuń '```'
         if cleaned_response.endswith('```'):
             cleaned_response = cleaned_response[:-3]  # Usuń '```' na końcu
-            
+
         cleaned_response = cleaned_response.strip()
         print(f"Cleaned response after markdown removal: '{cleaned_response}'")
-        
+
         try:
             # Parsuj odpowiedź JSON
             parsed_json = json.loads(cleaned_response)
@@ -125,7 +127,7 @@ ODPOWIEDZ TYLKO JSON - żadnego innego tekstu!"""
             print(f"Error position: line {e.lineno}, column {e.colno}")
             print(f"Failed to parse: '{cleaned_response}'")
             print(f"First 200 chars: '{cleaned_response[:200]}'")
-            
+
             # Zwróć domyślną strukturę w przypadku błędu
             return {
                 "summary_title": "Sesja terapeutyczna - błąd podsumowania",

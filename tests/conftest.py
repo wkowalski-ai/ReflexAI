@@ -4,18 +4,16 @@ import asyncio
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from decouple import config
 from src.refleks_ai.main import app
 from src.refleks_ai.database.database import get_db
 from src.refleks_ai.models import Base
 from src.refleks_ai.security.hashing import get_password_hash
 
-# Baza danych testowa w pamięci
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+# Baza danych testowa PostgreSQL
+TEST_SQLALCHEMY_DATABASE_URL = config("TEST_DATABASE_URL", default="sqlite:///./test.db")
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, 
-    connect_args={"check_same_thread": False}
-)
+engine = create_engine(TEST_SQLALCHEMY_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def override_get_db():
@@ -38,8 +36,12 @@ def event_loop():
 def db_session():
     """Create a clean database for each test."""
     Base.metadata.create_all(bind=engine)
-    yield TestingSessionLocal()
-    Base.metadata.drop_all(bind=engine)
+    db = TestingSessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+        Base.metadata.drop_all(bind=engine)
 
 @pytest.fixture
 def client():
@@ -77,10 +79,4 @@ def authenticated_client(client, test_user_data, db_session):
     
     return client, token
 
-@pytest.fixture
-def page(browser):
-    """Create a new page for each test."""
-    context = browser.new_context()
-    page = context.new_page()
-    yield page
-    context.close()
+
