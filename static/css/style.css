@@ -7,7 +7,7 @@
 }
 
 body {
-    font-family: 'Lato', sans-serif;
+    font-family: 'Nunito', sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
     color: #333;
@@ -30,7 +30,7 @@ body {
     background: rgba(255, 255, 255, 0.95);
     padding: 40px;
     border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
     max-width: 400px;
     width: 100%;
     text-align: center;
@@ -40,7 +40,7 @@ body {
     color: #4a5568;
     margin-bottom: 10px;
     font-size: 2.5rem;
-    font-weight: 300;
+    font-weight: 700;
 }
 
 .subtitle {
@@ -60,7 +60,7 @@ body {
 .auth-section h2 {
     color: #4a5568;
     margin-bottom: 20px;
-    font-weight: 400;
+    font-weight: 600;
 }
 
 .auth-form {
@@ -75,21 +75,23 @@ body {
     display: block;
     margin-bottom: 5px;
     color: #4a5568;
-    font-weight: 400;
+    font-weight: 500;
 }
 
 .form-group input {
     width: 100%;
     padding: 12px;
     border: 2px solid #e2e8f0;
-    border-radius: 8px;
+    border-radius: 12px;
     font-size: 16px;
-    transition: border-color 0.3s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .form-group input:focus {
     outline: none;
     border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
 }
 
 .btn-primary {
@@ -98,15 +100,17 @@ body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
-    transition: transform 0.2s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.35);
 }
 
 .switch-auth {
@@ -118,7 +122,7 @@ body {
 .switch-auth a {
     color: #667eea;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .switch-auth a:hover {
@@ -130,6 +134,8 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 /* Navbar */
@@ -139,13 +145,15 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 15px 15px;
+    backdrop-filter: blur(10px);
 }
 
 .nav-brand h1 {
     color: #4a5568;
     font-size: 1.8rem;
-    font-weight: 300;
+    font-weight: 700;
 }
 
 .nav-menu {
@@ -158,6 +166,13 @@ body {
     font-size: 1.5rem;
     cursor: pointer;
     color: #4a5568;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.menu-toggle:hover {
+    background-color: #f7fafc;
 }
 
 .nav-dropdown {
@@ -165,11 +180,12 @@ body {
     top: 100%;
     right: 0;
     background: white;
-    border-radius: 8px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
     min-width: 200px;
     z-index: 1000;
     display: none;
+    overflow: hidden;
 }
 
 .nav-dropdown.show {
@@ -186,18 +202,11 @@ body {
     cursor: pointer;
     color: #4a5568;
     transition: background-color 0.2s ease;
+    font-weight: 500;
 }
 
 .nav-item:hover {
     background-color: #f7fafc;
-}
-
-.nav-item:first-child {
-    border-radius: 8px 8px 0 0;
-}
-
-.nav-item:last-child {
-    border-radius: 0 0 8px 8px;
 }
 
 /* Główna treść */
@@ -210,8 +219,6 @@ body {
 
 /* Widok czatu */
 .chat-view {
-    max-width: 800px;
-    margin: 0 auto;
     width: 100%;
     height: calc(100vh - 140px);
     display: flex;
@@ -221,11 +228,12 @@ body {
 .chat-container {
     flex: 1;
     background: rgba(255, 255, 255, 0.95);
-    border-radius: 15px;
+    border-radius: 20px;
     padding: 20px;
     margin-bottom: 20px;
     overflow-y: auto;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 .message {
@@ -252,6 +260,7 @@ body {
     padding: 12px 16px;
     border-radius: 18px;
     position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .message.user .message-content {
@@ -281,8 +290,9 @@ body {
 .chat-input-area {
     background: rgba(255, 255, 255, 0.95);
     padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 .chat-form {
@@ -298,11 +308,13 @@ body {
     border-radius: 25px;
     font-size: 16px;
     outline: none;
-    transition: border-color 0.3s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 #chat-input:focus {
     border-color: #667eea;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
 }
 
 .btn-send {
@@ -312,12 +324,14 @@ body {
     border: none;
     border-radius: 25px;
     cursor: pointer;
-    font-weight: 500;
-    transition: transform 0.2s ease;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.25);
 }
 
 .btn-send:hover {
     transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.35);
 }
 
 .btn-secondary {
@@ -326,14 +340,17 @@ body {
     background: #48bb78;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(72, 187, 120, 0.25);
 }
 
 .btn-secondary:hover {
     background: #38a169;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(72, 187, 120, 0.35);
 }
 
 /* Powiadomienia */
@@ -347,9 +364,9 @@ body {
 .notification {
     background: white;
     padding: 15px 20px;
-    border-radius: 8px;
+    border-radius: 12px;
     margin-bottom: 10px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     border-left: 4px solid #48bb78;
     animation: slideIn 0.3s ease;
 }
@@ -376,13 +393,24 @@ body {
 
 /* Responsywność */
 @media (max-width: 768px) {
+    .app-container {
+        max-width: 100%;
+        margin: 0;
+    }
+
     .auth-wrapper {
         padding: 30px 20px;
         margin: 10px;
+        border-radius: 15px;
+    }
+    
+    .auth-wrapper h1 {
+        font-size: 2rem;
     }
     
     .navbar {
-        padding: 10px 15px;
+        padding: 12px 15px;
+        border-radius: 0;
     }
     
     .nav-brand h1 {
@@ -403,9 +431,37 @@ body {
     
     .chat-form {
         flex-direction: column;
+        gap: 15px;
     }
     
+    .chat-container, .chat-input-area {
+        border-radius: 15px;
+    }
+
+    .btn-send {
+        border-radius: 12px;
+    }
+
     #chat-input {
-        margin-bottom: 10px;
+        border-radius: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-wrapper {
+        padding: 25px 15px;
+        margin: 5px;
+    }
+
+    .main-content {
+        padding: 10px;
+    }
+
+    .chat-container, .chat-input-area {
+        padding: 15px;
+    }
+
+    .navbar {
+        padding: 10px 15px;
     }
 }

@@ -1,4 +1,4 @@
-entrypoint = "main.py"
+entrypoint = "src/refleks_ai/main.py"
 modules = ["python-3.11", "postgresql-16"]
 
 [nix]
@@ -11,7 +11,7 @@ language = "python3"
 requiredFiles = [".replit", "replit.nix"]
 
 [deployment]
-run = ["python3", "main.py"]
+run = ["uvicorn", "src.refleks_ai.main:app", "--host", "0.0.0.0", "--port", "8080"]
 deploymentTarget = "cloudrun"
 
 [[ports]]
@@ -28,4 +28,4 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python main.py"
+args = "uvicorn src.refleks_ai.main:app --host 0.0.0.0 --port 5000"
