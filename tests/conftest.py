@@ -39,6 +39,48 @@ def client(db_session):
     with TestClient(app) as c:
         yield c
 
+# Test data fixtures
+@pytest.fixture
+def test_user_data():
+    """Fixture z danymi testowego użytkownika."""
+    return {
+        "email": "test@example.com",
+        "username": "testuser",
+        "password": "testpassword123"
+    }
+
+@pytest.fixture
+def authenticated_client(client, test_user_data):
+    """Fixture tworząca klienta z zalogowanym użytkownikiem."""
+    try:
+        # Zarejestruj użytkownika
+        register_response = client.post("/register", json=test_user_data)
+        
+        if register_response.status_code != 201:
+            print(f"Registration failed: {register_response.json()}")
+            raise Exception("Failed to register test user")
+        
+        # Zaloguj użytkownika
+        login_data = {
+            "username": test_user_data["email"],  # FastAPI OAuth2 używa 'username'
+            "password": test_user_data["password"]
+        }
+        
+        login_response = client.post("/token", data=login_data)
+        
+        if login_response.status_code != 200:
+            print(f"Login failed: {login_response.json()}")
+            raise Exception("Failed to login test user")
+        
+        token_data = login_response.json()
+        token = token_data["access_token"]
+        
+        return client, token
+        
+    except Exception as e:
+        print(f"Error in authenticated_client fixture: {e}")
+        raise
+
 # Playwright fixtures for E2E tests
 @pytest.fixture(scope="session")
 def browser_context_args(browser_context_args):
@@ -48,7 +90,14 @@ def browser_context_args(browser_context_args):
         "viewport": {"width": 1280, "height": 720},
     }
 
-@pytest.fixture
+@pytest.fixture(scope="session")
+def playwright_test_fixture():
+    """Fixture do testów E2E - pomija jeśli Playwright nie jest dostępny."""
+    try:
+        from playwright.sync_api import sync_playwright
+        return True
+    except ImportError:
+        pytest.skip("Playwright not available for E2E tests")test.fixture
 def test_user_data():
     """Sample user data for testing."""
     return {
