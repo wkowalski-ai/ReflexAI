@@ -1,0 +1,47 @@
+Krok 1: Zdefiniuj modele SQLAlchemy w katalogu src/refleks_ai/models/
+
+W pliku src/refleks_ai/models/user_model.py zdefiniuj model User z kolumnami: id (Integer, Primary Key), email (String, Unique, Not Null), hashed_password (String, Not Null), username (String, Unique), created_at (TIMESTAMP z strefą czasową), updated_at (TIMESTAMP z strefą czasową).
+
+W pliku src/refleks_ai/models/thought_diary_model.py zdefiniuj model ThoughtDiary z kolumnami: id (Integer, Primary Key), user_id (Integer, Foreign Key do users.id), summary_title (String), session_data (JSONB, Not Null), created_at (TIMESTAMP z strefą czasową). Zdefiniuj relację (relationship) do modelu User.
+
+Krok 2: Skonfiguruj połączenie z bazą danych w src/refleks_ai/database/
+
+W pliku src/refleks_ai/database/database.py stwórz logikę do połączenia z bazą danych. Użyj SQLAlchemy, aby stworzyć engine oraz sessionmaker. Odczytaj DATABASE_URL ze zmiennych środowiskowych.
+
+Krok 3: Zdefiniuj schematy Pydantic w katalogu src/refleks_ai/schemas/
+
+W pliku src/refleks_ai/schemas/diary_schema.py stwórz następujące schematy Pydantic:
+
+DiaryBase: z polem summary_title.
+
+DiaryCreate: dziedziczący po DiaryBase, z dodatkowym polem session_data (typ dict).
+
+DiaryUpdate: dziedziczący po DiaryBase.
+
+DiaryInDB: dziedziczący po DiaryBase, z dodatkowymi polami id, user_id, created_at i session_data.
+
+Krok 4: Skonfiguruj Alembic do migracji bazy danych
+
+W pliku alembic.ini upewnij się, że sqlalchemy.url jest ustawione na odczyt zmiennej środowiskowej DATABASE_URL.
+
+W pliku env.py (wewnątrz folderu migracji) zaimportuj swój Base z modeli SQLAlchemy i ustaw target_metadata = Base.metadata.
+
+Krok 5: Zaimplementuj router dla Dziennika w src/refleks_ai/routers/
+
+W pliku src/refleks_ai/routers/diary_router.py stwórz APIRouter.
+
+Zaimplementuj następujące endpointy, zakładając, że masz już działającą zależność get_current_user, która dostarcza obiekt zalogowanego użytkownika:
+
+GET /diaries/: Zwraca listę dzienników (List[DiaryInDB]) dla zalogowanego użytkownika.
+
+GET /diaries/{diary_id}: Zwraca jeden dziennik (DiaryInDB) na podstawie jego ID, sprawdzając, czy należy on do zalogowanego użytkownika.
+
+POST /diaries/: Tworzy nowy wpis w dzienniku (DiaryCreate), przypisując go do zalogowanego użytkownika.
+
+PATCH /diaries/{diary_id}: Aktualizuje tylko pole summary_title wpisu (DiaryUpdate).
+
+DELETE /diaries/{diary_id}: Usuwa wpis z dziennika.
+
+Krok 6: Zintegruj router z główną aplikacją
+
+W pliku src/refleks_ai/main.py zaimportuj i dołącz nowo utworzony diary_router do głównej aplikacji FastAPI.
