@@ -55,10 +55,10 @@ def test_login_invalid_credentials(client):
     }
     
     response = client.post("/token", data=login_data)
-    assert response.status_code == 401 422
+    assert response.status_code == 401
 
 
-def test_login_success(client, test_user_data):
+def test_login_success_manual(client, test_user_data):
     """Test udanego logowania."""
     # Najpierw zarejestruj użytkownika
     client.post("/register", json=test_user_data)
