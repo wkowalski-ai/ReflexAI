@@ -1,4 +1,3 @@
-
 import httpx
 import json
 from typing import List, Dict
@@ -10,17 +9,17 @@ async def get_ai_response(history: List[dict]) -> str:
     Komunikuje się z OpenRouter API, aby uzyskać odpowiedź AI
     """
     api_key = config("OPENROUTER_API_KEY")
-    
+
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json"
     }
-    
+
     payload = {
-        "model": "google/gemini-2.0-flash",
+        "model": "google/gemini-2.5-flash",
         "messages": history
     }
-    
+
     async with httpx.AsyncClient() as client:
         response = await client.post(
             "https://openrouter.ai/api/v1/chat/completions",
@@ -28,7 +27,7 @@ async def get_ai_response(history: List[dict]) -> str:
             json=payload
         )
         response.raise_for_status()
-        
+
         data = response.json()
         return data["choices"][0]["message"]["content"]
 
@@ -55,23 +54,23 @@ async def summarize_session(history: List[dict]) -> dict:
         }
         Odpowiedz TYLKO JSON, bez dodatkowego tekstu."""
     }
-    
+
     # Skopiuj historię i dodaj prompt
     extended_history = history.copy()
     extended_history.append(summary_prompt)
-    
+
     api_key = config("OPENROUTER_API_KEY")
-    
+
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json"
     }
-    
+
     payload = {
-        "model": "google/gemini-2.0-flash",
+        "model": "google/gemini-2.5-flash",
         "messages": extended_history
     }
-    
+
     async with httpx.AsyncClient() as client:
         response = await client.post(
             "https://openrouter.ai/api/v1/chat/completions",
@@ -79,9 +78,9 @@ async def summarize_session(history: List[dict]) -> dict:
             json=payload
         )
         response.raise_for_status()
-        
+
         data = response.json()
         ai_response = data["choices"][0]["message"]["content"]
-        
+
         # Parsuj odpowiedź JSON
         return json.loads(ai_response)
