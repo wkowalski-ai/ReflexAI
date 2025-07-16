@@ -6,6 +6,9 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 import os
+import subprocess
+import time
+import requests
 
 from src.refleks_ai.models import Base
 from src.refleks_ai.database.database import get_db
@@ -119,3 +122,35 @@ def authenticated_client(client, test_user_data):
     except Exception as e:
         print(f"Error in authenticated_client fixture: {e}")
         raise
+
+@pytest.fixture(scope="session")
+def test_server():
+    """Fixture uruchamiająca serwer dla testów E2E."""
+    # Uruchom serwer w subprocess
+    process = subprocess.Popen([
+        "uvicorn", 
+        "src.refleks_ai.main:app",
+        "--host", "127.0.0.1",
+        "--port", "5000",
+        "--log-level", "error"
+    ])
+
+    # Poczekaj aż serwer się uruchomi
+    max_attempts = 30
+    for attempt in range(max_attempts):
+        try:
+            response = requests.get("http://127.0.0.1:5000/health", timeout=1)
+            if response.status_code == 200:
+                break
+        except:
+            pass
+        time.sleep(1)
+    else:
+        process.terminate()
+        raise Exception("Serwer nie uruchomił się w czasie 30 sekund")
+
+    yield process
+
+    # Zatrzymaj serwer
+    process.terminate()
+    process.wait()
