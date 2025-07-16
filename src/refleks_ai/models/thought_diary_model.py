@@ -18,7 +18,11 @@ class JSONType(TypeDecorator):
 
     def process_result_value(self, value, dialect):
         if value is not None:
-            return json.loads(value)
+            # PostgreSQL zwraca już sparsowany dict, SQLite zwraca string
+            if isinstance(value, str):
+                return json.loads(value)
+            else:
+                return value  # Już sparsowane przez PostgreSQL
         return value
 
 
